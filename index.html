@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #2a4365, #63b3ed);
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 900px;
+        }
+
+        .container h1 {
+            font-size: 2.5rem;
+            font-weight: bolder;
+            margin-bottom: 1rem;
+        }
+
+        .container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        .container input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .container button {
+            margin-left: 400px;
+            padding: 0.5rem;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Loan Application</h1>
+        <form id="loanForm">
+            <label for="fname">Full Name:</label>
+            <input type="text" id="fname" name="fname" required>
+            <span id="fnameError" class="error"></span>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span id="emailError" class="error"></span>
+
+            <label for="pan">PAN:</label>
+            <input type="text" id="pan" name="pan" required>
+            <span id="panError" class="error"></span>
+
+            <label for="loan">Loan Amount:</label>
+            <input type="number" id="loan" name="loan" required>
+            <span id="loanError" class="error"></span> <br>
+
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        const patterns = {
+            fname: /^[A-Za-z]{4,}\s[A-Za-z]{4,}$/,
+            email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+            pan: /^[A-Z]{5}[0-9]{4}[A-Z]$/
+        };
+
+        const validateForm = () => {
+            let isValid = true;
+            ['fname', 'email', 'pan'].forEach(id => {
+                const input = document.getElementById(id);
+                const error = document.getElementById(id + 'Error');
+                if (!patterns[id].test(input.value)) {
+                    error.textContent = `Invalid ${id}`;
+                    isValid = false;
+                } else {
+                    error.textContent = '';
+                }
+            });
+            const loan = document.getElementById('loan').value;
+            const loanError = document.getElementById('loanError');
+            if (loan.length > 9 || isNaN(loan) || loan <= 0) {
+                loanError.textContent = "Enter a valid loan amount up to 9 digits.";
+                isValid = false;
+            } else {
+                loanError.textContent = "";
+            }
+            return isValid;
+        };
+
+        const submitForm = () => {
+            if (validateForm()) {
+                // Generate and store the OTP
+                const mainotp = Math.round(Math.random() * 2000) + 2000;
+                localStorage.setItem("mainotp", mainotp);
+
+                // Get user input values
+                const fname = document.getElementById('fname').value;
+                const email = document.getElementById('email').value;
+
+                sessionStorage.setItem('userData', JSON.stringify({ fname, email }));
+
+
+
+
+                // Alert the OTP
+                alert(`Your OTP is: ${mainotp}`);
+
+                // Redirect to prct.html
+                window.location.assign(`confirmation.html`);
+
+            }
+        };
+    </script>
+</body>
+
+</html>

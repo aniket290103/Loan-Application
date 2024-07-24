@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Confirmation</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #2a4365, #63b3ed);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #e2e8f0;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            width: 900px;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .mb {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: bolder;
+        }
+
+
+        input[type="text"] {
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            width: 100%;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+
+        .error {
+            color: #f56565;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        button {
+            background-color: #3182ce;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #2b6cb0;
+        }
+
+        .name {
+            font-size: x-large;
+            font-variant: small-caps;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: bold;
+        }
+
+        .email {
+            font-size: larger;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>OTP Confirmation</h1>
+        <p id="confirmationMessage" class="mb"></p>
+        <input type="text" placeholder="Enter the OTP" id="userOtp" required>
+        <span id="otpError" class="error"></span>
+        <button id="validateBtn">Validate</button>
+    </div>
+
+    <script>
+        // Retrieve user data from sessionStorage
+        const userData = JSON.parse(sessionStorage.getItem('userData'));
+        if (userData) {
+            const { fname, email } = userData;
+
+            // Display confirmation message with user's fname and email
+            document.getElementById('confirmationMessage').innerHTML = `Dear <span class="name">${fname}</span>,<br><br>Thank you for your inquiry. A 4-digit verification number has been sent to your email on <span class="email">${email}</span>. Please enter it in the following box and submit for confirmation.`;
+        }
+
+        let count = 0;
+        document.querySelector("#validateBtn").addEventListener('click', () => {
+            if (count < 3) {
+                const userOtp = parseInt(document.querySelector("#userOtp").value);
+                const mainOtp = parseInt(localStorage.getItem('mainotp'));
+
+                if (userOtp === mainOtp) {
+                    document.getElementById('otpError').textContent = "";
+                    window.location.assign('successful.html');
+
+                } else {
+                    alert(`Validation failed. ${2 - count} attempts left.`);
+                    document.getElementById('otpError').textContent = "Invalid OTP. Please try again.";
+                }
+                count++;
+            } else {
+                alert("Invalid OTP");
+                window.location.assign('error.html');
+            }
+        });
+
+
+    </script>
+
+</body>
+
+</html>
